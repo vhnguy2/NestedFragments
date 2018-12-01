@@ -45,6 +45,8 @@ public class MainFragment extends Fragment {
 
     adapter = new ViewPagerAdapter(getResources(), getChildFragmentManager());
     viewPager.setAdapter(adapter);
+    ViewPager.PageTransformer pt = new MyPageTransformer();
+    viewPager.setPageTransformer(false, pt);
 
     return rootView;
   }
@@ -66,5 +68,39 @@ public class MainFragment extends Fragment {
 
     // this Fragment couldn't handle the onBackPressed call
     return false;
+  }
+
+  private class MyPageTransformer implements ViewPager.PageTransformer {
+
+    private final float MIN_X_DELTA = 100f;
+    private final float MIN_ALPHA_DELTA = 0.5f;
+
+    @Override
+    public void transformPage(@NonNull View view, float position) {
+      int pageWidth = view.getWidth();
+
+      if (position < -1) { // [-Infinity,-1)
+        // This page is way off-screen to the left.
+        view.setAlpha(0f);
+      } else if (position <= 0) { // [-1,0]
+        // Fade the page out.
+        float alpha = MIN_ALPHA_DELTA + (1 - MIN_ALPHA_DELTA) * (1 - Math.abs(position));
+        view.setAlpha(alpha);
+        // Scale the page down (between MIN_SCALE and 1)
+        float xDelta = MIN_X_DELTA + (1 - MIN_X_DELTA) * (1 - Math.abs(position));
+        // Counteract the default slide transition
+        view.setTranslationX((pageWidth * -position) - xDelta);
+      } else if (position <= 1) { // (0,1]
+        // Use the default slide transition when moving to the left page
+        view.setAlpha(1f);
+        view.setTranslationX(0f);
+        view.setScaleX(1f);
+        view.setScaleY(1f);
+        view.bringToFront();
+      } else { // (1,+Infinity]
+        // This page is way off-screen to the right.
+        view.setAlpha(0f);
+      }
+    }
   }
 }

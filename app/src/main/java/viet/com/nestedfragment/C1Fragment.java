@@ -28,6 +28,7 @@ public class C1Fragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.fragment_layout, parent, false);
+    rootView.setBackgroundColor(getResources().getColor(android.R.color.holo_green_dark));
 
     textView = rootView.findViewById(R.id.value);
     textView.setText(localCount);

@@ -29,6 +29,7 @@ public class A1Fragment extends Fragment implements OnBackPressedListener {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.fragment_layout, parent, false);
+    rootView.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_bright));
 
     textView = rootView.findViewById(R.id.value);
     textView.setText(localCount);
